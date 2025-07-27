@@ -22,6 +22,26 @@ class Expression(ABC):
     def __str__(self) -> str:
         pass
 
+    @final
+    def __add__(self, other: "Expression") -> "Expression":
+        return BinaryExpression(self, Operator.ADD, other)
+
+    @final
+    def __sub__(self, other: "Expression") -> "Expression":
+        return BinaryExpression(self, Operator.SUBTRACT, other)
+
+    @final
+    def __mul__(self, other: "Expression") -> "Expression":
+        return BinaryExpression(self, Operator.MULTIPLY, other)
+
+    @final
+    def __truediv__(self, other: "Expression") -> "Expression":
+        return BinaryExpression(self, Operator.DIVIDE, other)
+
+    @final
+    def __floordiv__(self, other: "Expression") -> "Expression":
+        return BinaryExpression(self, Operator.DIVIDE, other)
+
 
 @final
 class Operator(Enum):
