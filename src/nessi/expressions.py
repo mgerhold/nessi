@@ -165,6 +165,9 @@ class Variable(Expression):
     def __str__(self) -> str:
         return f"Variable({self._name})"
 
+    def __getitem__(self, index: Expression) -> "ArrayElement":
+        return ArrayElement(self._name, index)
+
 
 @final
 class Integer(Expression):
