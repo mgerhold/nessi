@@ -39,21 +39,23 @@ class DiagramGenerator(StatementVisitor[Symbol]):
                 sanitized_target: Final = statement.target.replace("_", r"\_")
                 if isinstance(statement.type_, ArrayType):
                     if isinstance(statement.type_.length, int):
-                        return Imperative(
-                            rf"Eingabe: \texttt{{{sanitized_target}}}[{statement.type_.length}]"
-                        )
+                        return Imperative(rf"Eingabe: \texttt{{{sanitized_target}}}[{statement.type_.length}]")
                     if isinstance(statement.type_.length, str):
                         return Imperative(
-                            rf"Eingabe: \texttt{{{sanitized_target}}}[\texttt{{{statement.type_.length.replace("_", r"\_")}}}]"
+                            rf"Eingabe: \texttt{{{sanitized_target}}}"
+                            + rf"[\texttt{{{statement.type_.length.replace('_', r'\_')}}}]"
                         )
                     raise NotImplementedError(
-                        f"Diagram generation for array input not implemented: Unexpected length type {type(statement.type_.length)}"
+                        "Diagram generation for array input not implemented: "
+                        + f"Unexpected length type {type(statement.type_.length)}"
                     )
                 return Imperative(rf"Eingabe: \texttt{{{sanitized_target}}}")
             case Output():
                 return Imperative(f"Ausgabe: {DiagramGenerator._placeholders_to_latex(statement.text.text)}")
             case Assignment():
-                return Imperative(rf"$\texttt{{{statement.target.replace("_", r"\_")}}} := {statement.value.to_latex()}$")
+                return Imperative(
+                    rf"$\texttt{{{statement.target.replace('_', r'\_')}}} := {statement.value.to_latex()}$"
+                )
             case TruthCheck():
                 has_else_branch: Final = bool(statement.else_)
                 common_condition_part: Final = f"${statement.condition.to_latex()}$?"
