@@ -12,7 +12,7 @@ class Program:
     def __init__(self, statements: Block) -> None:
         self._statements = statements
 
-    def run(self, input_values: dict[str, Value], *, verbose: bool) -> str:
+    def run(self, input_values: dict[str, Value], *, verbose: bool = False) -> str:
         interpreter: Final = Interpreter(input_values)
         output = ""
         for statement in self._statements:
