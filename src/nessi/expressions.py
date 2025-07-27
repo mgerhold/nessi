@@ -64,6 +64,8 @@ class BinaryExpression(Expression):
             case Operator.MULTIPLY:
                 return left * right
             case Operator.DIVIDE:
+                if isinstance(left, int) and isinstance(right, int):
+                    return left // right
                 return left / right
             case Operator.MODULUS:
                 return left % right
