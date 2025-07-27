@@ -42,6 +42,34 @@ class Expression(ABC):
     def __floordiv__(self, other: "Expression") -> "Expression":
         return BinaryExpression(self, Operator.DIVIDE, other)
 
+    @final
+    def __mod__(self, other: "Expression") -> "Expression":
+        return BinaryExpression(self, Operator.MODULUS, other)
+
+    @final
+    def __eq__(self, other: "Expression") -> "Expression":
+        return BinaryExpression(self, Operator.EQUALS, other)
+
+    @final
+    def __ne__(self, other: "Expression") -> "Expression":
+        return BinaryExpression(self, Operator.NOT_EQUALS, other)
+
+    @final
+    def __gt__(self, other: "Expression") -> "Expression":
+        return BinaryExpression(self, Operator.GREATER_THAN, other)
+
+    @final
+    def __lt__(self, other: "Expression") -> "Expression":
+        return BinaryExpression(self, Operator.LESS_THAN, other)
+
+    @final
+    def __ge__(self, other: "Expression") -> "Expression":
+        return BinaryExpression(self, Operator.GREATER_THAN_OR_EQUAL, other)
+
+    @final
+    def __le__(self, other: "Expression") -> "Expression":
+        return BinaryExpression(self, Operator.LESS_THAN_OR_EQUAL, other)
+
 
 @final
 class Operator(Enum):
