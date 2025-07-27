@@ -56,7 +56,11 @@ uv sync
 
 ## Usage
 
-See the `examples` folder for usage demonstrations.
+See the `examples` folder for usage demonstrations. To run an example, type:
+
+```bash
+uv run python examples/<filename>.py
+```
 
 ## Core Components
 
