@@ -126,4 +126,4 @@ class DiagramGenerator(StatementVisitor[Symbol]):
         is_single_statement: Final = len(block) == 1
         if is_single_statement:
             return self.visit(block[0])
-        return Serial([self.visit(statement) for statement in block])
+        return Serial([self.visit(statement) for statement in block if not statement.hidden_in_latex])

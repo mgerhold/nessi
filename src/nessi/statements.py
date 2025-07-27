@@ -16,7 +16,8 @@ type Block = list[Statement]
 
 @final
 class Input(Statement):
-    def __init__(self, target: str, type_: type | ArrayType) -> None:
+    def __init__(self, target: str, type_: type | ArrayType, *, hidden_in_latex: bool = False) -> None:
+        super().__init__(hidden_in_latex=hidden_in_latex)
         self._target = target
         self._type = type_
 
@@ -52,7 +53,8 @@ class Input(Statement):
 
 @final
 class Output(Statement):
-    def __init__(self, text: str) -> None:
+    def __init__(self, text: str, *, hidden_in_latex: bool = False) -> None:
+        super().__init__(hidden_in_latex=hidden_in_latex)
         self._text = InterpolatedString(text)
 
     @property
@@ -69,7 +71,8 @@ class Output(Statement):
 
 @final
 class Assignment(Statement):
-    def __init__(self, target: str, value: Expression) -> None:
+    def __init__(self, target: str, value: Expression, *, hidden_in_latex: bool = False) -> None:
+        super().__init__(hidden_in_latex=hidden_in_latex)
         self._target = target
         self._value = value
 
@@ -93,7 +96,10 @@ class TruthCheck(Statement):
         condition: Expression,
         then: Statement | Block,
         else_: Optional[Statement | Block] = None,
+        *,
+        hidden_in_latex: bool = False,
     ) -> None:
+        super().__init__(hidden_in_latex=hidden_in_latex)
         self._condition = condition
         self._then = [then] if isinstance(then, Statement) else then
         self._else = [] if else_ is None else ([else_] if isinstance(else_, Statement) else else_)
@@ -125,7 +131,9 @@ class PreTestedLoop(Statement):
         body: Statement | Block,
         *,
         label: Optional[str] = None,
+        hidden_in_latex: bool = False,
     ) -> None:
+        super().__init__(hidden_in_latex=hidden_in_latex)
         self._condition = condition
         self._body = [body] if isinstance(body, Statement) else body
         self._label = label
@@ -156,7 +164,9 @@ class PostTestedLoop(Statement):
         condition: Expression,
         *,
         label: Optional[str] = None,
+        hidden_in_latex: bool = False,
     ) -> None:
+        super().__init__(hidden_in_latex=hidden_in_latex)
         self._body = [body] if isinstance(body, Statement) else body
         self._condition = condition
         self._label = label
@@ -186,7 +196,9 @@ class Loop(Statement):
         body: Statement | Block,
         *,
         label: Optional[str] = None,
+        hidden_in_latex: bool = False,
     ) -> None:
+        super().__init__(hidden_in_latex=hidden_in_latex)
         self._body = [body] if isinstance(body, Statement) else body
         self._label = label
 
@@ -206,7 +218,8 @@ class Loop(Statement):
 
 @final
 class Break(Statement):
-    def __init__(self, label: str) -> None:
+    def __init__(self, label: str, *, hidden_in_latex: bool = False) -> None:
+        super().__init__(hidden_in_latex=hidden_in_latex)
         self._label = label
 
     @property
@@ -220,7 +233,8 @@ class Break(Statement):
 
 @final
 class DocumentedBlock(Statement):
-    def __init__(self, docstring: str, block: Block) -> None:
+    def __init__(self, docstring: str, block: Block, *, hidden_in_latex: bool = False) -> None:
+        super().__init__(hidden_in_latex=hidden_in_latex)
         self._docstring = docstring
         self._block = block
 
@@ -297,7 +311,14 @@ def is_match_arm_condition_satisfied(
 
 @final
 class Match(Statement):
-    def __init__(self, value: Expression, arms: list[MatchArm]) -> None:
+    def __init__(
+        self,
+        value: Expression,
+        arms: list[MatchArm],
+        *,
+        hidden_in_latex: bool = False,
+    ) -> None:
+        super().__init__(hidden_in_latex=hidden_in_latex)
         self._value = value
         self._arms = arms
 
