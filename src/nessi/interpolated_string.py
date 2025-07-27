@@ -1,4 +1,5 @@
-from typing import final, override
+from typing import final
+from typing import override
 
 from nessi.value import Value
 

@@ -1,35 +1,33 @@
 import re
-from typing import Final, final
+from typing import Final
+from typing import final
 
 from nassi_shneiderman_generator.symbols import Block as DiagramBlock
-from nassi_shneiderman_generator.symbols import (
-    Branch,
-    ContinuousIteration,
-    DyadicSelective,
-    Imperative,
-    MonadicSelective,
-    MultipleExclusiveSelective,
-    PostTestedIteration,
-    PreTestedIteration,
-    Serial,
-    Symbol,
-    Termination,
-)
+from nassi_shneiderman_generator.symbols import Branch
+from nassi_shneiderman_generator.symbols import ContinuousIteration
+from nassi_shneiderman_generator.symbols import DyadicSelective
+from nassi_shneiderman_generator.symbols import Imperative
+from nassi_shneiderman_generator.symbols import MonadicSelective
+from nassi_shneiderman_generator.symbols import MultipleExclusiveSelective
+from nassi_shneiderman_generator.symbols import PostTestedIteration
+from nassi_shneiderman_generator.symbols import PreTestedIteration
+from nassi_shneiderman_generator.symbols import Serial
+from nassi_shneiderman_generator.symbols import Symbol
+from nassi_shneiderman_generator.symbols import Termination
 
-from nessi.statement_visitor import Statement, StatementVisitor
-from nessi.statements import (
-    Assignment,
-    Block,
-    Break,
-    DocumentedBlock,
-    Input,
-    Loop,
-    Match,
-    Output,
-    PostTestedLoop,
-    PreTestedLoop,
-    TruthCheck,
-)
+from nessi.statement_visitor import Statement
+from nessi.statement_visitor import StatementVisitor
+from nessi.statements import Assignment
+from nessi.statements import Block
+from nessi.statements import Break
+from nessi.statements import DocumentedBlock
+from nessi.statements import Input
+from nessi.statements import Loop
+from nessi.statements import Match
+from nessi.statements import Output
+from nessi.statements import PostTestedLoop
+from nessi.statements import PreTestedLoop
+from nessi.statements import TruthCheck
 
 
 @final

@@ -1,9 +1,10 @@
+from pathlib import Path
 from typing import Final
 
-from pathlib import Path
+from nassi_shneiderman_generator.main import render_latex_to_pdf
+
 from nessi.program import Program
 from nessi.statements import Output
-from nassi_shneiderman_generator.main import render_latex_to_pdf
 
 program: Final = Program([
     Output("Hello, World!"),

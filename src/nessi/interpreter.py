@@ -1,19 +1,21 @@
-from typing import Final, Optional, final, override
+from typing import Final
+from typing import Optional
+from typing import final
+from typing import override
 
-from nessi.statement_visitor import Statement, StatementVisitor
-from nessi.statements import (
-    Assignment,
-    Break,
-    DocumentedBlock,
-    Input,
-    Loop,
-    Match,
-    Output,
-    PostTestedLoop,
-    PreTestedLoop,
-    TruthCheck,
-    is_match_arm_condition_satisfied,
-)
+from nessi.statement_visitor import Statement
+from nessi.statement_visitor import StatementVisitor
+from nessi.statements import Assignment
+from nessi.statements import Break
+from nessi.statements import DocumentedBlock
+from nessi.statements import Input
+from nessi.statements import Loop
+from nessi.statements import Match
+from nessi.statements import Output
+from nessi.statements import PostTestedLoop
+from nessi.statements import PreTestedLoop
+from nessi.statements import TruthCheck
+from nessi.statements import is_match_arm_condition_satisfied
 from nessi.value import Value
 
 

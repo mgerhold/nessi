@@ -1,5 +1,8 @@
 from enum import Enum
-from typing import Final, Optional, final, override
+from typing import Final
+from typing import Optional
+from typing import final
+from typing import override
 
 from nessi.context import Context
 from nessi.expressions import Expression

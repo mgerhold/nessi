@@ -1,9 +1,11 @@
-from typing import Final, final
+from typing import Final
+from typing import final
 
 from nassi_shneiderman_generator.diagram import Diagram
 
 from nessi.diagram_generator import DiagramGenerator
-from nessi.interpreter import Interpreter, Value
+from nessi.interpreter import Interpreter
+from nessi.interpreter import Value
 from nessi.statements import Block
 
 

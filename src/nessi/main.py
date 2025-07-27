@@ -3,21 +3,22 @@ from typing import Final
 
 from nassi_shneiderman_generator.latex import render_latex_to_pdf
 
-from nessi.expressions import BinaryExpression, Integer, Operator, Variable
+from nessi.expressions import BinaryExpression
+from nessi.expressions import Integer
+from nessi.expressions import Operator
+from nessi.expressions import Variable
 from nessi.program import Program
-from nessi.statements import (
-    Assignment,
-    Break,
-    Input,
-    Loop,
-    Match,
-    MatchArm,
-    Output,
-    PostTestedLoop,
-    PreTestedLoop,
-    RelativeOperator,
-    TruthCheck,
-)
+from nessi.statements import Assignment
+from nessi.statements import Break
+from nessi.statements import Input
+from nessi.statements import Loop
+from nessi.statements import Match
+from nessi.statements import MatchArm
+from nessi.statements import Output
+from nessi.statements import PostTestedLoop
+from nessi.statements import PreTestedLoop
+from nessi.statements import RelativeOperator
+from nessi.statements import TruthCheck
 from nessi.value import Value
 
 
@@ -134,10 +135,6 @@ def main() -> None:
     latex_code: Final = diagram.emit()
     render_latex_to_pdf(latex_code, Path("test.pdf"))
     print(f"Program output:\n'''\n{output}'''")
-    # generate_diagrams(
-    #     folder_path=Path("diagramme").resolve(),
-    #     force_recreate=False,
-    # )
 
 
 if __name__ == "__main__":

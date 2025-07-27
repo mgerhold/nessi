@@ -1,6 +1,9 @@
-from abc import ABC, abstractmethod
+from abc import ABC
+from abc import abstractmethod
 from enum import Enum
-from typing import Final, final, override
+from typing import Final
+from typing import final
+from typing import override
 
 from nessi.context import Context
 from nessi.value import Value
