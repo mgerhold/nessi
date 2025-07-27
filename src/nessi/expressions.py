@@ -86,6 +86,25 @@ class Operator(Enum):
     LESS_THAN_OR_EQUAL = ("<=", r"\leq")
 
 
+def _precedence(operator: Operator) -> int:
+    match operator:
+        case Operator.ADD | Operator.SUBTRACT:
+            return 1
+        case Operator.MULTIPLY | Operator.DIVIDE | Operator.MODULUS:
+            return 2
+        case (
+            Operator.GREATER_THAN
+            | Operator.LESS_THAN
+            | Operator.EQUALS
+            | Operator.NOT_EQUALS
+            | Operator.GREATER_THAN_OR_EQUAL
+            | Operator.LESS_THAN_OR_EQUAL
+        ):
+            return 0
+        case _:
+            raise ValueError(f"Unknown operator: {operator}")
+
+
 @final
 class BinaryExpression(Expression):
     def __init__(self, left: Expression, operator: Operator, right: Expression) -> None:
@@ -135,10 +154,17 @@ class BinaryExpression(Expression):
 
     @override
     def to_latex(self) -> str:
-        left: Final = self._left.to_latex()
-        right: Final = self._right.to_latex()
+        left: Final = (
+            f"({self._left.to_latex()})" if self._does_child_need_parentheses(self._left) else self._left.to_latex()
+        )
+        right: Final = (
+            f"({self._right.to_latex()})" if self._does_child_need_parentheses(self._right) else self._right.to_latex()
+        )
         operator: Final = self._operator.value[1]
         return f"{left} {operator} {right}"
+
+    def _does_child_need_parentheses(self, child: Expression) -> bool:
+        return isinstance(child, BinaryExpression) and _precedence(self._operator) < _precedence(child._operator)
 
     @override
     def __str__(self) -> str:
