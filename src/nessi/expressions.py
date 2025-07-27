@@ -198,6 +198,8 @@ class Float(Expression):
 
     @override
     def to_latex(self) -> str:
+        if self._value.is_integer():
+            return str(int(self._value))
         return str(self._value).replace(".", ",")
 
     @override
