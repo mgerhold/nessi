@@ -25,8 +25,8 @@ dev = [
 line-length = 120
 indent-width = 4
 
-[tool.ruff.lint.isort]
-force-single-line = true
-
 [tool.ruff.lint]
 select = ["I", "F", "E", "W"]
+
+[tool.ruff.lint.isort]
+force-single-line = true
