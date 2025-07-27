@@ -137,6 +137,24 @@ class Integer(Expression):
 
 
 @final
+class Float(Expression):
+    def __init__(self, value: float) -> None:
+        self._value = value
+
+    @override
+    def evaluate(self, context: Context) -> Value:
+        return self._value
+
+    @override
+    def to_latex(self) -> str:
+        return str(self._value).replace(".", ",")
+
+    @override
+    def __str__(self) -> str:
+        return str(self._value)
+
+
+@final
 class ArrayElement(Expression):
     def __init__(self, array_name: str, index: Expression) -> None:
         self._array_name = array_name
@@ -157,7 +175,7 @@ class ArrayElement(Expression):
     @override
     def to_latex(self) -> str:
         index: Final = self._index.to_latex()
-        return rf"\texttt{{{self._array_name.replace("_", r"\_")}}}[{index}]"
+        return rf"\texttt{{{self._array_name.replace('_', r'\_')}}}[{index}]"
 
     @override
     def __str__(self) -> str:
