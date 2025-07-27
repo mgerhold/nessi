@@ -134,7 +134,12 @@ class Interpreter(StatementVisitor[str]):
         return self._variables
 
     def _evaluate_block(self, block: list[Statement]) -> str:
-        return "".join(self.visit(statement) for statement in block)
+        output = ""
+        for statement in block:
+            output += self.visit(statement)
+            if self._current_break_label is not None:
+                break
+        return output
 
     def _store_value(self, name: str, value: Value) -> None:
         self._variables[name] = value
