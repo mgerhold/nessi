@@ -92,7 +92,7 @@ class TruthCheck(Statement):
         self,
         condition: Expression,
         then: Statement | Block,
-        else_: Optional[Statement | Block],
+        else_: Optional[Statement | Block] = None,
     ) -> None:
         self._condition = condition
         self._then = [then] if isinstance(then, Statement) else then
