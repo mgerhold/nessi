@@ -50,7 +50,7 @@ class Interpreter(StatementVisitor[str]):
         match statement:
             case Input():
                 input_value: Final = self._get_input_value(statement.target)
-                statement.raise_if_not_assignable(input_value)
+                statement.raise_if_not_assignable(input_value, self.variables)
                 self._store_value(statement.target, input_value)
                 return ""  # No output.
             case Output():

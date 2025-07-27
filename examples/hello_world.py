@@ -6,9 +6,11 @@ from nassi_shneiderman_generator.main import render_latex_to_pdf
 from nessi.program import Program
 from nessi.statements import Output
 
-program: Final = Program([
-    Output("Hello, World!"),
-])
+program: Final = Program(
+    [
+        Output("Hello, World!"),
+    ]
+)
 
 output: Final = program.run({})
 print(f"Program output:\n{output}")  # Outputs: "Hello, World!"

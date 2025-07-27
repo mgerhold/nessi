@@ -3,22 +3,17 @@ from typing import Final
 
 from nassi_shneiderman_generator.latex import render_latex_to_pdf
 
+from nessi.array_type import ArrayType
+from nessi.expressions import ArrayElement
 from nessi.expressions import BinaryExpression
 from nessi.expressions import Integer
 from nessi.expressions import Operator
 from nessi.expressions import Variable
 from nessi.program import Program
 from nessi.statements import Assignment
-from nessi.statements import Break
 from nessi.statements import Input
-from nessi.statements import Loop
-from nessi.statements import Match
-from nessi.statements import MatchArm
 from nessi.statements import Output
-from nessi.statements import PostTestedLoop
 from nessi.statements import PreTestedLoop
-from nessi.statements import RelativeOperator
-from nessi.statements import TruthCheck
 from nessi.value import Value
 
 
@@ -26,113 +21,46 @@ def main() -> None:
     program: Final = Program(
         [
             Input("n", int),
-            Assignment(
-                "n",
-                BinaryExpression(Variable("n"), Operator.ADD, Integer(2)),
-            ),
-            Output("Der Wert ist {n}."),
+            Input("binary", ArrayType(int, "n")),
+            Assignment("decimal", Integer(0)),
+            Assignment("power_of_2", Integer(1)),
+            Assignment("i", BinaryExpression(Variable("n"), Operator.SUBTRACT, Integer(1))),
             PreTestedLoop(
-                BinaryExpression(
-                    Variable("n"),
-                    Operator.LESS_THAN,
-                    Integer(50),
-                ),
+                BinaryExpression(Variable("i"), Operator.GREATER_THAN_OR_EQUAL, Integer(0)),
                 [
-                    TruthCheck(
+                    Assignment(
+                        "decimal",
                         BinaryExpression(
+                            Variable("decimal"),
+                            Operator.ADD,
                             BinaryExpression(
-                                Variable("n"),
-                                Operator.MODULUS,
-                                Integer(2),
+                                ArrayElement("binary", Variable("i")),
+                                Operator.MULTIPLY,
+                                Variable("power_of_2"),
                             ),
-                            Operator.EQUALS,
-                            Integer(0),
                         ),
-                        Output("{n} ist gerade."),
-                        [
-                            Output("{n} ist ungerade. Raus hier!"),
-                            Break("Schleife"),
-                        ],
                     ),
                     Assignment(
-                        "n",
-                        BinaryExpression(Variable("n"), Operator.ADD, Integer(1)),
+                        "power_of_2",
+                        BinaryExpression(Variable("power_of_2"), Operator.MULTIPLY, Integer(2)),
                     ),
-                ],
-                label="Schleife",
-            ),
-            Match(
-                Variable("n"),
-                [
-                    MatchArm(
-                        RelativeOperator.LESS_THAN,
-                        Integer(40),
-                        Output("Sehr komisch"),
-                    ),
-                    MatchArm(
-                        RelativeOperator.LESS_THAN,
-                        Integer(41),
-                        Output("Hä?"),
-                    ),
-                    MatchArm(
-                        RelativeOperator.LESS_THAN,
-                        Integer(50),
-                        Output("War zu erwarten."),
-                    ),
-                    MatchArm(
-                        RelativeOperator.GREATER_THAN_OR_EQUAL,
-                        Integer(51),
-                        Output("Wuss?"),
-                    ),
-                ],
-            ),
-            PostTestedLoop(
-                [
                     Assignment(
-                        "n",
-                        BinaryExpression(Variable("n"), Operator.SUBTRACT, Integer(10)),
+                        "i",
+                        BinaryExpression(Variable("i"), Operator.SUBTRACT, Integer(1)),
                     ),
-                    Output("Der Wert ist {n}."),
                 ],
-                BinaryExpression(
-                    Variable("n"),
-                    Operator.GREATER_THAN,
-                    Integer(0),
-                ),
             ),
-            PreTestedLoop(
-                BinaryExpression(Integer(1), Operator.EQUALS, Integer(1)),
-                Loop(
-                    [
-                        Assignment(
-                            "n",
-                            BinaryExpression(Variable("n"), Operator.ADD, Integer(1)),
-                        ),
-                        Output("Der Wert ist {n}."),
-                        TruthCheck(
-                            BinaryExpression(
-                                Variable("n"),
-                                Operator.GREATER_THAN,
-                                Integer(10),
-                            ),
-                            [
-                                Output("Der Wert ist größer als 10."),
-                                Break("Schleife"),
-                            ],
-                            Output("Der Wert ist kleiner oder gleich 10."),
-                        ),
-                    ]
-                ),
-                label="Schleife",
-            ),
+            Output("Die Dezimalzahl ist {decimal}."),
         ]
     )
     input_values: Final[dict[str, Value]] = {
-        "n": 40,
+        "n": 8,
+        "binary": [0, 1, 0, 0, 1, 1, 0, 1],
     }
     output: Final = program.run(input_values, verbose=False)
     diagram: Final = program.generate_diagram()
     latex_code: Final = diagram.emit()
+    print(latex_code)
     render_latex_to_pdf(latex_code, Path("test.pdf"))
     print(f"Program output:\n'''\n{output}'''")
 

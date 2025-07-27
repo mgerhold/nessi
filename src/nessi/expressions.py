@@ -109,7 +109,7 @@ class Variable(Expression):
 
     @override
     def to_latex(self) -> str:
-        return rf"\texttt{{{self._name}}}"
+        return rf"\texttt{{{self._name.replace('_', r'\_')}}}"
 
     @override
     def __str__(self) -> str:
@@ -132,3 +132,31 @@ class Integer(Expression):
     @override
     def __str__(self) -> str:
         return str(self._value)
+
+
+@final
+class ArrayElement(Expression):
+    def __init__(self, array_name: str, index: Expression) -> None:
+        self._array_name = array_name
+        self._index = index
+
+    @override
+    def evaluate(self, context: Context) -> Value:
+        array: Final = context.get(self._array_name)
+        if array is None or not isinstance(array, list):
+            raise KeyError(f"Array '{self._array_name}' not found in context or is not a list")
+        index_value: Final = self._index.evaluate(context)
+        if not isinstance(index_value, int):
+            raise TypeError(f"Index must be an integer, got {type(index_value)}")
+        if index_value not in range(len(array)):
+            raise IndexError(f"Index {index_value} out of bounds for array '{self._array_name}'")
+        return array[index_value]
+
+    @override
+    def to_latex(self) -> str:
+        index: Final = self._index.to_latex()
+        return rf"\texttt{{{self._array_name.replace("_", r"\_")}}}[{index}]"
+
+    @override
+    def __str__(self) -> str:
+        return f"{self._array_name}[{self._index}]"

@@ -1,1 +1,1 @@
-type Value = int | float | str | bool
+type Value = int | float | str | bool | list[int]

@@ -4,6 +4,7 @@ from typing import Optional
 from typing import final
 from typing import override
 
+from nessi.array_type import ArrayType
 from nessi.context import Context
 from nessi.expressions import Expression
 from nessi.interpolated_string import InterpolatedString
@@ -15,7 +16,7 @@ type Block = list[Statement]
 
 @final
 class Input(Statement):
-    def __init__(self, target: str, type_: type) -> None:
+    def __init__(self, target: str, type_: type | ArrayType) -> None:
         self._target = target
         self._type = type_
 
@@ -23,9 +24,26 @@ class Input(Statement):
     def target(self) -> str:
         return self._target
 
-    def raise_if_not_assignable(self, value: Value) -> None:
-        if not isinstance(value, self._type):
-            raise TypeError(f"Cannot assign {value} to {self._target}: expected {self._type.__name__}")
+    @property
+    def type_(self) -> type | ArrayType:
+        return self._type
+
+    def raise_if_not_assignable(self, value: Value, context: Context) -> None:
+        if not isinstance(self._type, ArrayType):
+            if not isinstance(value, self._type):
+                raise TypeError(f"Cannot assign {value} to {self._target}: expected {self._type.__name__}")
+            return
+
+        # This is an array type.
+        if not isinstance(value, list):
+            raise TypeError(f"Cannot assign {value} to {self._target}: expected list")
+        array_length: Final = self._type.length if isinstance(self._type.length, int) else context[self._type.length]
+        if len(value) != array_length:
+            raise ValueError(
+                f"Cannot assign {value} to {self._target}: expected list of length {array_length}, got {len(value)}"
+            )
+        if not all(isinstance(item, self._type.type_) for item in value):
+            raise TypeError(f"Cannot assign {value} to {self._target}: expected list of {self._type.type_.__name__}")
 
     @override
     def __str__(self) -> str:
