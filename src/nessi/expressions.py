@@ -164,7 +164,7 @@ class BinaryExpression(Expression):
         return f"{left} {operator} {right}"
 
     def _does_child_need_parentheses(self, child: Expression) -> bool:
-        return isinstance(child, BinaryExpression) and _precedence(self._operator) < _precedence(child._operator)
+        return isinstance(child, BinaryExpression) and _precedence(child._operator) < _precedence(self._operator)
 
     @override
     def __str__(self) -> str:
