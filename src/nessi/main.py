@@ -22,14 +22,12 @@ def main() -> None:
             Assign("power_of_2", 1),
             Assign("i", Variable("n") - 1),
             While(Variable("i") >= 0).Repeat(
-                [
-                    Assign(
-                        "decimal",
-                        Variable("decimal") + Variable("binary")[Variable("i")] * Variable("power_of_2"),
-                    ),
-                    Assign("power_of_2", Variable("power_of_2") * 2),
-                    Assign("i", Variable("i") - 1),
-                ]
+                Assign(
+                    "decimal",
+                    Variable("decimal") + Variable("binary")[Variable("i")] * Variable("power_of_2"),
+                ),
+                Assign("power_of_2", Variable("power_of_2") * 2),
+                Assign("i", Variable("i") - 1),
             ),
             Print("Die Dezimalzahl ist {decimal}."),
         ]

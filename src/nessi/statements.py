@@ -109,12 +109,12 @@ class If(Statement):
         self._then: Block = []
         self._else: Block = []
 
-    def Then(self, then: Statement | Block) -> Self:
-        self._then = [then] if isinstance(then, Statement) else then
+    def Then(self, *then: Statement) -> Self:
+        self._then = list(then)
         return self
 
-    def Else(self, else_: Statement | Block) -> Self:
-        self._else = [else_] if isinstance(else_, Statement) else else_
+    def Else(self, *else_: Statement) -> Self:
+        self._else = list(else_)
         return self
 
     @property
@@ -150,8 +150,8 @@ class While(Statement):
         self._body: Block = []
         self._label = label
 
-    def Repeat(self, body: Statement | Block) -> Self:
-        self._body = [body] if isinstance(body, Statement) else body
+    def Repeat(self, *body: Statement) -> Self:
+        self._body = list(body)
         return self
 
     @property
@@ -176,13 +176,12 @@ class While(Statement):
 class Do(Statement):
     def __init__(
         self,
-        body: Statement | Block,
-        *,
+        *body: Statement,
         label: Optional[str] = None,
         hidden_in_latex: bool = False,
     ) -> None:
         super().__init__(hidden_in_latex=hidden_in_latex)
-        self._body = [body] if isinstance(body, Statement) else body
+        self._body = list(body)
         self._condition: Optional[Expression] = None
         self._label = label
 
@@ -212,13 +211,12 @@ class Do(Statement):
 class Loop(Statement):
     def __init__(
         self,
-        body: Statement | Block,
-        *,
+        *body: Statement,
         label: Optional[str] = None,
         hidden_in_latex: bool = False,
     ) -> None:
         super().__init__(hidden_in_latex=hidden_in_latex)
-        self._body = [body] if isinstance(body, Statement) else body
+        self._body = list(body)
         self._label = label
 
     @property
