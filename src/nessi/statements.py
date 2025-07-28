@@ -109,11 +109,11 @@ class If(Statement):
         self._then: Block = []
         self._else: Block = []
 
-    def then(self, then: Statement | Block) -> Self:
+    def Then(self, then: Statement | Block) -> Self:
         self._then = [then] if isinstance(then, Statement) else then
         return self
 
-    def else_(self, else_: Statement | Block) -> Self:
+    def Else(self, else_: Statement | Block) -> Self:
         self._else = [else_] if isinstance(else_, Statement) else else_
         return self
 
