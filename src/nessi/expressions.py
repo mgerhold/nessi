@@ -31,12 +31,24 @@ class Expression(ABC):
         return BinaryExpression(self, Operator.ADD, other)
 
     @final
+    def __radd__(self, other: "Expression | int | float") -> "Expression":
+        return self.__add__(other)
+
+    @final
     def __sub__(self, other: "Expression | int | float") -> "Expression":
         if isinstance(other, int):
             other = Integer(other)
         elif isinstance(other, float):
             other = Float(other)
         return BinaryExpression(self, Operator.SUBTRACT, other)
+
+    @final
+    def __rsub__(self, other: "Expression | int | float") -> "Expression":
+        if isinstance(other, int):
+            other = Integer(other)
+        elif isinstance(other, float):
+            other = Float(other)
+        return BinaryExpression(other, Operator.SUBTRACT, self)
 
     @final
     def __mul__(self, other: "Expression | int | float") -> "Expression":
@@ -47,12 +59,24 @@ class Expression(ABC):
         return BinaryExpression(self, Operator.MULTIPLY, other)
 
     @final
+    def __rmul__(self, other: "Expression | int | float") -> "Expression":
+        return self.__mul__(other)
+
+    @final
     def __truediv__(self, other: "Expression | int | float") -> "Expression":
         if isinstance(other, int):
             other = Integer(other)
         elif isinstance(other, float):
             other = Float(other)
         return BinaryExpression(self, Operator.DIVIDE, other)
+
+    @final
+    def __rtruediv__(self, other: "Expression | int | float") -> "Expression":
+        if isinstance(other, int):
+            other = Integer(other)
+        elif isinstance(other, float):
+            other = Float(other)
+        return BinaryExpression(other, Operator.DIVIDE, self)
 
     @final
     def __floordiv__(self, other: "Expression | int | float") -> "Expression":
@@ -63,10 +87,24 @@ class Expression(ABC):
         return BinaryExpression(self, Operator.DIVIDE, other)
 
     @final
+    def __rfloordiv__(self, other: "Expression | int | float") -> "Expression":
+        if isinstance(other, int):
+            other = Integer(other)
+        elif isinstance(other, float):
+            other = Float(other)
+        return BinaryExpression(other, Operator.DIVIDE, self)
+
+    @final
     def __mod__(self, other: "Expression | int") -> "Expression":
         if isinstance(other, int):
             other = Integer(other)
         return BinaryExpression(self, Operator.MODULUS, other)
+
+    @final
+    def __rmod__(self, other: "Expression | int") -> "Expression":
+        if isinstance(other, int):
+            other = Integer(other)
+        return BinaryExpression(other, Operator.MODULUS, self)
 
     @final
     def __eq__(self, other: "Expression | int | float") -> "Expression":
