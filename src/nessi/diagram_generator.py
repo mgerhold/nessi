@@ -26,9 +26,9 @@ from nessi.statements import Input
 from nessi.statements import Loop
 from nessi.statements import Match
 from nessi.statements import Output
-from nessi.statements import PostTestedLoop
-from nessi.statements import PreTestedLoop
-from nessi.statements import TruthCheck
+from nessi.statements import DoWhile
+from nessi.statements import While
+from nessi.statements import If
 
 
 @final
@@ -56,7 +56,7 @@ class DiagramGenerator(StatementVisitor[Symbol]):
                 return Imperative(
                     rf"$\texttt{{{statement.target.replace('_', r'\_')}}} := {statement.value.to_latex()}$"
                 )
-            case TruthCheck():
+            case If():
                 has_else_branch: Final = bool(statement.else_)
                 common_condition_part: Final = f"${statement.condition.to_latex()}$?"
                 if has_else_branch:
@@ -72,14 +72,14 @@ class DiagramGenerator(StatementVisitor[Symbol]):
                     common_condition_part,
                     Branch("ja", self.generate_diagram_for_block(statement.then)),
                 )
-            case PreTestedLoop():
+            case While():
                 loop_header_text = "" if statement.label is None else f"{statement.label}: "
                 loop_header_text += f"${statement.condition.to_latex()}$"
                 return PreTestedIteration(
                     loop_header_text,
                     self.generate_diagram_for_block(statement.body),
                 )
-            case PostTestedLoop():
+            case DoWhile():
                 loop_footer_text = "" if statement.label is None else f"{statement.label}: "
                 loop_footer_text += f"${statement.condition.to_latex()}$"
                 return PostTestedIteration(

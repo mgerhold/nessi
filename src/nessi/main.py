@@ -13,7 +13,7 @@ from nessi.program import Program
 from nessi.statements import Assignment
 from nessi.statements import Input
 from nessi.statements import Output
-from nessi.statements import PreTestedLoop
+from nessi.statements import While
 from nessi.value import Value
 
 
@@ -25,7 +25,7 @@ def main() -> None:
             Assignment("decimal", Integer(0)),
             Assignment("power_of_2", Integer(1)),
             Assignment("i", BinaryExpression(Variable("n"), Operator.SUBTRACT, Integer(1))),
-            PreTestedLoop(
+            While(
                 BinaryExpression(Variable("i"), Operator.GREATER_THAN_OR_EQUAL, Integer(0)),
                 [
                     Assignment(

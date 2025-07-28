@@ -12,9 +12,9 @@ from nessi.statements import Input
 from nessi.statements import Loop
 from nessi.statements import Match
 from nessi.statements import Output
-from nessi.statements import PostTestedLoop
-from nessi.statements import PreTestedLoop
-from nessi.statements import TruthCheck
+from nessi.statements import DoWhile
+from nessi.statements import While
+from nessi.statements import If
 from nessi.statements import is_match_arm_condition_satisfied
 from nessi.value import Value
 
@@ -60,12 +60,12 @@ class Interpreter(StatementVisitor[str]):
                 # No type checking here. ¯\_(ツ)_/¯
                 self._store_value(statement.target, value)
                 return ""  # No output.
-            case TruthCheck():
+            case If():
                 is_condition_satisfied = statement.condition.evaluate(self.variables)
                 if not isinstance(is_condition_satisfied, bool):
                     raise TypeError(f"Condition must evaluate to a boolean, got {type(is_condition_satisfied)}.")
                 return self._evaluate_block(statement.then if is_condition_satisfied else statement.else_)
-            case PreTestedLoop():
+            case While():
                 if statement.label is not None:
                     self._loop_label_stack.append(statement.label)
                 output = ""
@@ -83,7 +83,7 @@ class Interpreter(StatementVisitor[str]):
                         self._current_break_label = None
                     self._loop_label_stack.pop()
                 return output
-            case PostTestedLoop():
+            case DoWhile():
                 if statement.label is not None:
                     self._loop_label_stack.append(statement.label)
                 output = ""

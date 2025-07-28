@@ -90,7 +90,7 @@ class Assignment(Statement):
 
 
 @final
-class TruthCheck(Statement):
+class If(Statement):
     def __init__(
         self,
         condition: Expression,
@@ -124,7 +124,7 @@ class TruthCheck(Statement):
 
 
 @final
-class PreTestedLoop(Statement):
+class While(Statement):
     def __init__(
         self,
         condition: Expression,
@@ -157,7 +157,7 @@ class PreTestedLoop(Statement):
 
 
 @final
-class PostTestedLoop(Statement):
+class DoWhile(Statement):
     def __init__(
         self,
         body: Statement | Block,
