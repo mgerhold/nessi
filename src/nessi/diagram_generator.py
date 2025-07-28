@@ -18,16 +18,16 @@ from nassi_shneiderman_generator.symbols import Termination
 from nessi.array_type import ArrayType
 from nessi.statement_visitor import Statement
 from nessi.statement_visitor import StatementVisitor
-from nessi.statements import Assignment
+from nessi.statements import Assign
 from nessi.statements import Block
 from nessi.statements import Break
+from nessi.statements import Do
 from nessi.statements import DocumentedBlock
-from nessi.statements import DoWhile
 from nessi.statements import If
 from nessi.statements import Input
 from nessi.statements import Loop
 from nessi.statements import Match
-from nessi.statements import Output
+from nessi.statements import Print
 from nessi.statements import While
 
 
@@ -50,9 +50,9 @@ class DiagramGenerator(StatementVisitor[Symbol]):
                         + f"Unexpected length type {type(statement.type_.length)}"
                     )
                 return Imperative(rf"Eingabe: \texttt{{{sanitized_target}}}")
-            case Output():
+            case Print():
                 return Imperative(f"Ausgabe: {DiagramGenerator._placeholders_to_latex(statement.text.text)}")
-            case Assignment():
+            case Assign():
                 return Imperative(
                     rf"$\texttt{{{statement.target.replace('_', r'\_')}}} := {statement.value.to_latex()}$"
                 )
@@ -79,9 +79,12 @@ class DiagramGenerator(StatementVisitor[Symbol]):
                     loop_header_text,
                     self.generate_diagram_for_block(statement.body),
                 )
-            case DoWhile():
+            case Do():
                 loop_footer_text = "" if statement.label is None else f"{statement.label}: "
-                loop_footer_text += f"${statement.condition.to_latex()}$"
+                condition: Final = statement.condition
+                if condition is None:
+                    raise ValueError("Do statement must have a condition.")
+                loop_footer_text += f"${condition.to_latex()}$"
                 return PostTestedIteration(
                     loop_footer_text,
                     self.generate_diagram_for_block(statement.body),

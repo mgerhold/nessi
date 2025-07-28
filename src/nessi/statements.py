@@ -55,7 +55,7 @@ class Input(Statement):
 
 
 @final
-class Output(Statement):
+class Print(Statement):
     def __init__(self, text: str, *, hidden_in_latex: bool = False) -> None:
         super().__init__(hidden_in_latex=hidden_in_latex)
         self._text = InterpolatedString(text)
@@ -73,7 +73,7 @@ class Output(Statement):
 
 
 @final
-class Assignment(Statement):
+class Assign(Statement):
     def __init__(self, target: str, value: Expression | int | float, *, hidden_in_latex: bool = False) -> None:
         super().__init__(hidden_in_latex=hidden_in_latex)
         if isinstance(value, int):
@@ -141,15 +141,18 @@ class While(Statement):
     def __init__(
         self,
         condition: Expression,
-        body: Statement | Block,
         *,
         label: Optional[str] = None,
         hidden_in_latex: bool = False,
     ) -> None:
         super().__init__(hidden_in_latex=hidden_in_latex)
         self._condition = condition
-        self._body = [body] if isinstance(body, Statement) else body
+        self._body: Block = []
         self._label = label
+
+    def Repeat(self, body: Statement | Block) -> Self:
+        self._body = [body] if isinstance(body, Statement) else body
+        return self
 
     @property
     def condition(self) -> Expression:
@@ -170,26 +173,29 @@ class While(Statement):
 
 
 @final
-class DoWhile(Statement):
+class Do(Statement):
     def __init__(
         self,
         body: Statement | Block,
-        condition: Expression,
         *,
         label: Optional[str] = None,
         hidden_in_latex: bool = False,
     ) -> None:
         super().__init__(hidden_in_latex=hidden_in_latex)
         self._body = [body] if isinstance(body, Statement) else body
-        self._condition = condition
+        self._condition: Optional[Expression] = None
         self._label = label
+
+    def While(self, condition: Expression) -> Self:
+        self._condition = condition
+        return self
 
     @property
     def body(self) -> Block:
         return self._body
 
     @property
-    def condition(self) -> Expression:
+    def condition(self) -> Optional[Expression]:
         return self._condition
 
     @property

@@ -6,9 +6,9 @@ from nassi_shneiderman_generator.latex import render_latex_to_pdf
 from nessi.array_type import ArrayType
 from nessi.expressions import Variable
 from nessi.program import Program
-from nessi.statements import Assignment
+from nessi.statements import Assign
 from nessi.statements import Input
-from nessi.statements import Output
+from nessi.statements import Print
 from nessi.statements import While
 from nessi.value import Value
 
@@ -18,21 +18,20 @@ def main() -> None:
         [
             Input("n", int),
             Input("binary", ArrayType(int, "n")),
-            Assignment("decimal", 0),
-            Assignment("power_of_2", 1),
-            Assignment("i", Variable("n") - 1),
-            While(
-                Variable("i") >= 0,
+            Assign("decimal", 0),
+            Assign("power_of_2", 1),
+            Assign("i", Variable("n") - 1),
+            While(Variable("i") >= 0).Repeat(
                 [
-                    Assignment(
+                    Assign(
                         "decimal",
                         Variable("decimal") + Variable("binary")[Variable("i")] * Variable("power_of_2"),
                     ),
-                    Assignment("power_of_2", Variable("power_of_2") * 2),
-                    Assignment("i", Variable("i") - 1),
-                ],
+                    Assign("power_of_2", Variable("power_of_2") * 2),
+                    Assign("i", Variable("i") - 1),
+                ]
             ),
-            Output("Die Dezimalzahl ist {decimal}."),
+            Print("Die Dezimalzahl ist {decimal}."),
         ]
     )
     input_values: Final[dict[str, Value]] = {

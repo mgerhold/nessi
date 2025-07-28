@@ -4,11 +4,11 @@ from typing import Final
 from nassi_shneiderman_generator.main import render_latex_to_pdf
 
 from nessi.program import Program
-from nessi.statements import Output
+from nessi.statements import Print
 
 program: Final = Program(
     [
-        Output("Hello, World!"),
+        Print("Hello, World!"),
     ]
 )
 

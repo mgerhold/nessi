@@ -5,15 +5,15 @@ from typing import override
 
 from nessi.statement_visitor import Statement
 from nessi.statement_visitor import StatementVisitor
-from nessi.statements import Assignment
+from nessi.statements import Assign
 from nessi.statements import Break
+from nessi.statements import Do
 from nessi.statements import DocumentedBlock
-from nessi.statements import DoWhile
 from nessi.statements import If
 from nessi.statements import Input
 from nessi.statements import Loop
 from nessi.statements import Match
-from nessi.statements import Output
+from nessi.statements import Print
 from nessi.statements import While
 from nessi.statements import is_match_arm_condition_satisfied
 from nessi.value import Value
@@ -53,9 +53,9 @@ class Interpreter(StatementVisitor[str]):
                 statement.raise_if_not_assignable(input_value, self.variables)
                 self._store_value(statement.target, input_value)
                 return ""  # No output.
-            case Output():
+            case Print():
                 return f"{statement.render(self.variables)}\n"
-            case Assignment():
+            case Assign():
                 value: Final = statement.value.evaluate(self.variables)
                 # No type checking here. ¯\_(ツ)_/¯
                 self._store_value(statement.target, value)
@@ -85,13 +85,16 @@ class Interpreter(StatementVisitor[str]):
                         self._current_break_label = None
                     self._loop_label_stack.pop()
                 return output
-            case DoWhile():
+            case Do():
                 if statement.label is not None:
                     self._loop_label_stack.append(statement.label)
                 output = ""
                 while True:
                     output += self._evaluate_block(statement.body)
-                    is_condition_satisfied = statement.condition.evaluate(self.variables)
+                    condition: Final = statement.condition
+                    if condition is None:
+                        raise ValueError("Do statement must have a condition.")
+                    is_condition_satisfied = condition.evaluate(self.variables)
                     if not isinstance(is_condition_satisfied, bool):
                         raise TypeError(f"Condition must evaluate to a boolean, got {type(is_condition_satisfied)}.")
                     if not is_condition_satisfied or self._current_break_label is not None:
