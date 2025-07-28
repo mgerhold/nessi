@@ -4,10 +4,6 @@ from typing import Final
 from nassi_shneiderman_generator.latex import render_latex_to_pdf
 
 from nessi.array_type import ArrayType
-from nessi.expressions import ArrayElement
-from nessi.expressions import BinaryExpression
-from nessi.expressions import Integer
-from nessi.expressions import Operator
 from nessi.expressions import Variable
 from nessi.program import Program
 from nessi.statements import Assignment
@@ -22,32 +18,18 @@ def main() -> None:
         [
             Input("n", int),
             Input("binary", ArrayType(int, "n")),
-            Assignment("decimal", Integer(0)),
-            Assignment("power_of_2", Integer(1)),
-            Assignment("i", BinaryExpression(Variable("n"), Operator.SUBTRACT, Integer(1))),
+            Assignment("decimal", 0),
+            Assignment("power_of_2", 1),
+            Assignment("i", Variable("n") - 1),
             While(
-                BinaryExpression(Variable("i"), Operator.GREATER_THAN_OR_EQUAL, Integer(0)),
+                Variable("i") >= 0,
                 [
                     Assignment(
                         "decimal",
-                        BinaryExpression(
-                            Variable("decimal"),
-                            Operator.ADD,
-                            BinaryExpression(
-                                ArrayElement("binary", Variable("i")),
-                                Operator.MULTIPLY,
-                                Variable("power_of_2"),
-                            ),
-                        ),
+                        Variable("decimal") + Variable("binary")[Variable("i")] * Variable("power_of_2"),
                     ),
-                    Assignment(
-                        "power_of_2",
-                        BinaryExpression(Variable("power_of_2"), Operator.MULTIPLY, Integer(2)),
-                    ),
-                    Assignment(
-                        "i",
-                        BinaryExpression(Variable("i"), Operator.SUBTRACT, Integer(1)),
-                    ),
+                    Assignment("power_of_2", Variable("power_of_2") * 2),
+                    Assignment("i", Variable("i") - 1),
                 ],
             ),
             Output("Die Dezimalzahl ist {decimal}."),

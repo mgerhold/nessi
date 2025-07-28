@@ -7,6 +7,8 @@ from typing import override
 from nessi.array_type import ArrayType
 from nessi.context import Context
 from nessi.expressions import Expression
+from nessi.expressions import Float
+from nessi.expressions import Integer
 from nessi.interpolated_string import InterpolatedString
 from nessi.statement_visitor import Statement
 from nessi.value import Value
@@ -71,8 +73,12 @@ class Output(Statement):
 
 @final
 class Assignment(Statement):
-    def __init__(self, target: str, value: Expression, *, hidden_in_latex: bool = False) -> None:
+    def __init__(self, target: str, value: Expression | int | float, *, hidden_in_latex: bool = False) -> None:
         super().__init__(hidden_in_latex=hidden_in_latex)
+        if isinstance(value, int):
+            value = Integer(value)
+        elif isinstance(value, float):
+            value = Float(value)
         self._target = target
         self._value = value
 

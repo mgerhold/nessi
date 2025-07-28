@@ -23,51 +23,97 @@ class Expression(ABC):
         pass
 
     @final
-    def __add__(self, other: "Expression") -> "Expression":
+    def __add__(self, other: "Expression | int | float") -> "Expression":
+        if isinstance(other, int):
+            other = Integer(other)
+        elif isinstance(other, float):
+            other = Float(other)
         return BinaryExpression(self, Operator.ADD, other)
 
     @final
-    def __sub__(self, other: "Expression") -> "Expression":
+    def __sub__(self, other: "Expression | int | float") -> "Expression":
+        if isinstance(other, int):
+            other = Integer(other)
+        elif isinstance(other, float):
+            other = Float(other)
         return BinaryExpression(self, Operator.SUBTRACT, other)
 
     @final
-    def __mul__(self, other: "Expression") -> "Expression":
+    def __mul__(self, other: "Expression | int | float") -> "Expression":
+        if isinstance(other, int):
+            other = Integer(other)
+        elif isinstance(other, float):
+            other = Float(other)
         return BinaryExpression(self, Operator.MULTIPLY, other)
 
     @final
-    def __truediv__(self, other: "Expression") -> "Expression":
+    def __truediv__(self, other: "Expression | int | float") -> "Expression":
+        if isinstance(other, int):
+            other = Integer(other)
+        elif isinstance(other, float):
+            other = Float(other)
         return BinaryExpression(self, Operator.DIVIDE, other)
 
     @final
-    def __floordiv__(self, other: "Expression") -> "Expression":
+    def __floordiv__(self, other: "Expression | int | float") -> "Expression":
+        if isinstance(other, int):
+            other = Integer(other)
+        elif isinstance(other, float):
+            other = Float(other)
         return BinaryExpression(self, Operator.DIVIDE, other)
 
     @final
-    def __mod__(self, other: "Expression") -> "Expression":
+    def __mod__(self, other: "Expression | int") -> "Expression":
+        if isinstance(other, int):
+            other = Integer(other)
         return BinaryExpression(self, Operator.MODULUS, other)
 
     @final
-    def __eq__(self, other: "Expression") -> "Expression":
+    def __eq__(self, other: "Expression | int | float") -> "Expression":
+        if isinstance(other, int):
+            other = Integer(other)
+        elif isinstance(other, float):
+            other = Float(other)
         return BinaryExpression(self, Operator.EQUALS, other)
 
     @final
-    def __ne__(self, other: "Expression") -> "Expression":
+    def __ne__(self, other: "Expression | int | float") -> "Expression":
+        if isinstance(other, int):
+            other = Integer(other)
+        elif isinstance(other, float):
+            other = Float(other)
         return BinaryExpression(self, Operator.NOT_EQUALS, other)
 
     @final
-    def __gt__(self, other: "Expression") -> "Expression":
+    def __gt__(self, other: "Expression | int | float") -> "Expression":
+        if isinstance(other, int):
+            other = Integer(other)
+        elif isinstance(other, float):
+            other = Float(other)
         return BinaryExpression(self, Operator.GREATER_THAN, other)
 
     @final
-    def __lt__(self, other: "Expression") -> "Expression":
+    def __lt__(self, other: "Expression | int | float") -> "Expression":
+        if isinstance(other, int):
+            other = Integer(other)
+        elif isinstance(other, float):
+            other = Float(other)
         return BinaryExpression(self, Operator.LESS_THAN, other)
 
     @final
-    def __ge__(self, other: "Expression") -> "Expression":
+    def __ge__(self, other: "Expression | int | float") -> "Expression":
+        if isinstance(other, int):
+            other = Integer(other)
+        elif isinstance(other, float):
+            other = Float(other)
         return BinaryExpression(self, Operator.GREATER_THAN_OR_EQUAL, other)
 
     @final
-    def __le__(self, other: "Expression") -> "Expression":
+    def __le__(self, other: "Expression | int | float") -> "Expression":
+        if isinstance(other, int):
+            other = Integer(other)
+        elif isinstance(other, float):
+            other = Float(other)
         return BinaryExpression(self, Operator.LESS_THAN_OR_EQUAL, other)
 
 
@@ -242,8 +288,12 @@ class ArrayElement(Expression):
     @override
     def evaluate(self, context: Context) -> Value:
         array: Final = context.get(self._array_name)
-        if array is None or not isinstance(array, list):
-            raise KeyError(f"Array '{self._array_name}' not found in context or is not a list")
+        if array is None:
+            msg = f"Array '{self._array_name}' not found in context"
+            raise KeyError(msg)
+        if not isinstance(array, list):
+            msg = f"Array '{self._array_name}' is not a list"
+            raise KeyError(msg)
         index_value: Final = self._index.evaluate(context)
         if not isinstance(index_value, int):
             raise TypeError(f"Index must be an integer, got {type(index_value)}")

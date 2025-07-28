@@ -8,13 +8,13 @@ from nessi.statement_visitor import StatementVisitor
 from nessi.statements import Assignment
 from nessi.statements import Break
 from nessi.statements import DocumentedBlock
+from nessi.statements import DoWhile
+from nessi.statements import If
 from nessi.statements import Input
 from nessi.statements import Loop
 from nessi.statements import Match
 from nessi.statements import Output
-from nessi.statements import DoWhile
 from nessi.statements import While
-from nessi.statements import If
 from nessi.statements import is_match_arm_condition_satisfied
 from nessi.value import Value
 
