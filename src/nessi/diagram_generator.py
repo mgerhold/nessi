@@ -62,15 +62,15 @@ class DiagramGenerator(StatementVisitor[Symbol]):
                 if has_else_branch:
                     return DyadicSelective(
                         common_condition_part,
-                        Branch("ja", self.generate_diagram_for_block(statement.then)),
+                        Branch("ja", self.generate_diagram_for_block(statement.then_block)),
                         Branch(
                             "nein",
-                            self.generate_diagram_for_block(statement.else_),
+                            self.generate_diagram_for_block(statement.else_block),
                         ),
                     )
                 return MonadicSelective(
                     common_condition_part,
-                    Branch("ja", self.generate_diagram_for_block(statement.then)),
+                    Branch("ja", self.generate_diagram_for_block(statement.then_block)),
                 )
             case While():
                 loop_header_text = "" if statement.label is None else f"{statement.label}: "

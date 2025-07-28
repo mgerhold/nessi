@@ -64,7 +64,9 @@ class Interpreter(StatementVisitor[str]):
                 is_condition_satisfied = statement.condition.evaluate(self.variables)
                 if not isinstance(is_condition_satisfied, bool):
                     raise TypeError(f"Condition must evaluate to a boolean, got {type(is_condition_satisfied)}.")
-                return self._evaluate_block(statement.then if is_condition_satisfied else statement.else_)
+                if not statement.then_block:
+                    raise ValueError("If statement must have a 'then' block.")
+                return self._evaluate_block(statement.then_block if is_condition_satisfied else statement.else_block)
             case While():
                 if statement.label is not None:
                     self._loop_label_stack.append(statement.label)

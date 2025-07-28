@@ -1,6 +1,7 @@
 from enum import Enum
 from typing import Final
 from typing import Optional
+from typing import Self
 from typing import final
 from typing import override
 
@@ -100,32 +101,38 @@ class If(Statement):
     def __init__(
         self,
         condition: Expression,
-        then: Statement | Block,
-        else_: Optional[Statement | Block] = None,
         *,
         hidden_in_latex: bool = False,
     ) -> None:
         super().__init__(hidden_in_latex=hidden_in_latex)
         self._condition = condition
+        self._then: Block = []
+        self._else: Block = []
+
+    def then(self, then: Statement | Block) -> Self:
         self._then = [then] if isinstance(then, Statement) else then
-        self._else = [] if else_ is None else ([else_] if isinstance(else_, Statement) else else_)
+        return self
+
+    def else_(self, else_: Statement | Block) -> Self:
+        self._else = [else_] if isinstance(else_, Statement) else else_
+        return self
 
     @property
     def condition(self) -> Expression:
         return self._condition
 
     @property
-    def then(self) -> Block:
+    def then_block(self) -> Block:
         return self._then
 
     @property
-    def else_(self) -> Block:
+    def else_block(self) -> Block:
         return self._else
 
     @override
     def __str__(self) -> str:
-        then_str: Final = ", ".join(str(statement) for statement in self.then)
-        else_str = f", else: {', '.join(str(statement) for statement in self.else_)}" if self._else else ""
+        then_str: Final = ", ".join(str(statement) for statement in self.then_block)
+        else_str = f", else: {', '.join(str(statement) for statement in self.else_block)}" if self._else else ""
         return f"TruthCheck({self._condition}, then: {then_str}{else_str})"
 
 
