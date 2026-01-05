@@ -57,7 +57,7 @@ class DiagramGenerator(StatementVisitor[Symbol]):
                     rf"$\texttt{{{statement.target.replace('_', r'\_')}}} := {statement.value.to_latex()}$"
                 )
             case If():
-                has_else_branch: Final = bool(statement.Else)
+                has_else_branch: Final = bool(statement.else_block)
                 common_condition_part: Final = f"${statement.condition.to_latex()}$?"
                 if has_else_branch:
                     return DyadicSelective(
@@ -126,8 +126,6 @@ class DiagramGenerator(StatementVisitor[Symbol]):
         return re.sub(r"\{([^{}]+)}", r"\\texttt{\1}", text).replace("_", r"\_")
 
     def generate_diagram_for_block(self, block: Block) -> Symbol:
-        if not block:
-            return Imperative("")
         is_single_statement: Final = len(block) == 1
         if is_single_statement:
             return self.visit(block[0])
