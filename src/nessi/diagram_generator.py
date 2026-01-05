@@ -57,7 +57,7 @@ class DiagramGenerator(StatementVisitor[Symbol]):
                     rf"$\texttt{{{statement.target.replace('_', r'\_')}}} := {statement.value.to_latex()}$"
                 )
             case If():
-                has_else_branch: Final = bool(statement.Else)
+                has_else_branch: Final = bool(statement.else_block)
                 common_condition_part: Final = f"${statement.condition.to_latex()}$?"
                 if has_else_branch:
                     return DyadicSelective(
