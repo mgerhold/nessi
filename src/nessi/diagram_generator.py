@@ -127,7 +127,7 @@ class DiagramGenerator(StatementVisitor[Symbol]):
 
     def generate_diagram_for_block(self, block: Block) -> Symbol:
         if not block:
-            return Termination("")
+            return Imperative("")
         is_single_statement: Final = len(block) == 1
         if is_single_statement:
             return self.visit(block[0])
