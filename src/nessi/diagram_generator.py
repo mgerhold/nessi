@@ -126,6 +126,8 @@ class DiagramGenerator(StatementVisitor[Symbol]):
         return re.sub(r"\{([^{}]+)}", r"\\texttt{\1}", text).replace("_", r"\_")
 
     def generate_diagram_for_block(self, block: Block) -> Symbol:
+        if not block:
+            return Termination("")
         is_single_statement: Final = len(block) == 1
         if is_single_statement:
             return self.visit(block[0])
