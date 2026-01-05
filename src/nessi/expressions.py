@@ -107,7 +107,7 @@ class Expression(ABC):
         return BinaryExpression(other, Operator.MODULUS, self)
 
     @final
-    def __eq__(self, other: "Expression | int | float") -> "Expression":
+    def __eq__(self, other: "Expression | int | float") -> "Expression":  # type: ignore[bad-override]
         if isinstance(other, int):
             other = Integer(other)
         elif isinstance(other, float):
@@ -115,7 +115,7 @@ class Expression(ABC):
         return BinaryExpression(self, Operator.EQUALS, other)
 
     @final
-    def __ne__(self, other: "Expression | int | float") -> "Expression":
+    def __ne__(self, other: "Expression | int | float") -> "Expression":  # type: ignore[bad-override]
         if isinstance(other, int):
             other = Integer(other)
         elif isinstance(other, float):
