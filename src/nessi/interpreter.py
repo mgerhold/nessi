@@ -3,6 +3,7 @@ from typing import Optional
 from typing import final
 from typing import override
 
+from nessi.array_type import ArrayType
 from nessi.statement_visitor import Statement
 from nessi.statement_visitor import StatementVisitor
 from nessi.statements import Assign
@@ -51,7 +52,11 @@ class Interpreter(StatementVisitor[str]):
             case Input():
                 input_value: Final = self._get_input_value(statement.target)
                 statement.raise_if_not_assignable(input_value, self.variables)
-                self._store_value(statement.target, input_value)
+                if isinstance(input_value, list) and not isinstance(statement.type_, ArrayType):
+                    first_value: Final = input_value.pop(0)
+                    self._store_value(statement.target, first_value)
+                else:
+                    self._store_value(statement.target, input_value)
                 return ""  # No output.
             case Print():
                 return f"{statement.render(self.variables)}\n"

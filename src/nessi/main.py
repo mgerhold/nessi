@@ -44,7 +44,25 @@ EXAMPLES = [
             "n": 8,
             "binary": [0, 1, 0, 0, 1, 1, 0, 1],
         },
-    )
+    ),
+    Example(
+        program=Program(
+            [
+                Assign("sum", 0.0),
+                Assign("count", 0),
+                Input("number", float),
+                While(Variable("number") >= 0).Repeat(
+                    Assign("sum", Variable("sum") + Variable("number")),
+                    Assign("count", Variable("count") + 1),
+                    Input("number", float),
+                ),
+                Print("{sum}, {count}"),
+            ]
+        ),
+        input_values={
+            "number": [5.0, 3.2, 7.1, -1.0],
+        },
+    ),
 ]
 
 
