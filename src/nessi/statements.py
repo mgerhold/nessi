@@ -33,6 +33,9 @@ class Input(Statement):
         return self._type
 
     def raise_if_not_assignable(self, value: Value, context: Context) -> None:
+        if isinstance(value, list) and all(isinstance(value, self._type) for value in value):
+            # This is okay, we will just consume the next value of the list.
+            return
         if not isinstance(self._type, ArrayType):
             if not isinstance(value, self._type):
                 raise TypeError(f"Cannot assign {value} to {self._target}: expected {self._type.__name__}")
