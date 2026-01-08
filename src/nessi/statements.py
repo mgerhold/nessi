@@ -7,6 +7,7 @@ from typing import override
 
 from nessi.array_type import ArrayType
 from nessi.context import Context
+from nessi.expressions import ArrayElement
 from nessi.expressions import Expression
 from nessi.expressions import Float
 from nessi.expressions import Integer
@@ -33,7 +34,11 @@ class Input(Statement):
         return self._type
 
     def raise_if_not_assignable(self, value: Value, context: Context) -> None:
-        if isinstance(value, list) and all(isinstance(value, self._type) for value in value):
+        if (
+            isinstance(value, list)
+            and not isinstance(self._type, ArrayType)
+            and all(isinstance(value, self._type) for value in value)
+        ):
             # This is okay, we will just consume the next value of the list.
             return
         if not isinstance(self._type, ArrayType):
@@ -77,7 +82,13 @@ class Print(Statement):
 
 @final
 class Assign(Statement):
-    def __init__(self, target: str, value: Expression | int | float, *, hidden_in_latex: bool = False) -> None:
+    def __init__(
+        self,
+        target: str | ArrayElement,
+        value: Expression | int | float,
+        *,
+        hidden_in_latex: bool = False,
+    ) -> None:
         super().__init__(hidden_in_latex=hidden_in_latex)
         if isinstance(value, int):
             value = Integer(value)
@@ -87,7 +98,7 @@ class Assign(Statement):
         self._value = value
 
     @property
-    def target(self) -> str:
+    def target(self) -> str | ArrayElement:
         return self._target
 
     @property

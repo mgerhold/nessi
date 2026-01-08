@@ -323,6 +323,14 @@ class ArrayElement(Expression):
         self._array_name = array_name
         self._index = index
 
+    @property
+    def array_name(self) -> str:
+        return self._array_name
+
+    @property
+    def index(self) -> Expression:
+        return self._index
+
     @override
     def evaluate(self, context: Context) -> Value:
         array: Final = context.get(self._array_name)
