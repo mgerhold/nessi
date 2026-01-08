@@ -33,7 +33,11 @@ class Input(Statement):
         return self._type
 
     def raise_if_not_assignable(self, value: Value, context: Context) -> None:
-        if isinstance(value, list) and all(isinstance(value, self._type) for value in value):
+        if (
+            isinstance(value, list)
+            and not isinstance(self._type, ArrayType)
+            and all(isinstance(value, self._type) for value in value)
+        ):
             # This is okay, we will just consume the next value of the list.
             return
         if not isinstance(self._type, ArrayType):
