@@ -16,6 +16,7 @@ from nassi_shneiderman_generator.symbols import Symbol
 from nassi_shneiderman_generator.symbols import Termination
 
 from nessi.array_type import ArrayType
+from nessi.expressions import ArrayElement
 from nessi.statement_visitor import Statement
 from nessi.statement_visitor import StatementVisitor
 from nessi.statements import Assign
@@ -53,9 +54,14 @@ class DiagramGenerator(StatementVisitor[Symbol]):
             case Print():
                 return Imperative(f"Ausgabe: {DiagramGenerator._placeholders_to_latex(statement.text.text)}")
             case Assign():
-                return Imperative(
-                    rf"$\texttt{{{statement.target.replace('_', r'\_')}}} := {statement.value.to_latex()}$"
-                )
+                match statement.target:
+                    case str():
+                        target = rf"\texttt{{{statement.target.replace('_', r'\_')}}}"
+                    case ArrayElement():
+                        target = statement.target.to_latex()
+                    case _:
+                        raise NotImplementedError
+                return Imperative(f"${target} := {statement.value.to_latex()}$")
             case If():
                 has_else_branch: Final = bool(statement.else_block)
                 common_condition_part: Final = f"${statement.condition.to_latex()}$?"

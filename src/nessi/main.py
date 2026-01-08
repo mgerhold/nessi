@@ -63,6 +63,26 @@ EXAMPLES = [
             "number": [5.0, 3.2, 7.1, -1.0],
         },
     ),
+    Example(
+        program=Program(
+            [
+                Input("numbers", ArrayType(int, 3)),
+                Input("index", int),
+                Input("value", int),
+                Assign(Variable("numbers")[Variable("index")], Variable("value")),
+                Assign("i", 0),
+                While(Variable("i") < 3).Repeat(
+                    Print("{numbers[i]}"),
+                    Assign("i", Variable("i") + 1),
+                ),
+            ]
+        ),
+        input_values={
+            "numbers": [10, 20, 30],
+            "index": 1,
+            "value": 99,
+        },
+    )
 ]
 
 

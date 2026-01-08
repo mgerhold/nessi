@@ -4,6 +4,7 @@ from typing import final
 from typing import override
 
 from nessi.array_type import ArrayType
+from nessi.expressions import ArrayElement
 from nessi.statement_visitor import Statement
 from nessi.statement_visitor import StatementVisitor
 from nessi.statements import Assign
@@ -63,7 +64,24 @@ class Interpreter(StatementVisitor[str]):
             case Assign():
                 value: Final = statement.value.evaluate(self.variables)
                 # No type checking here. ¯\_(ツ)_/¯
-                self._store_value(statement.target, value)
+                match statement.target:
+                    case str():
+                        self._store_value(statement.target, value)
+                    case ArrayElement() as array_element:
+                        array_name: Final = array_element.array_name
+                        index: Final = array_element.index.evaluate(context=self.variables)
+                        array_value: Final = self.variables.get(array_name)
+                        if not isinstance(array_value, list):
+                            raise TypeError(f"Variable '{array_name}' is not an array.")
+                        if not isinstance(index, int):
+                            raise TypeError(f"Array index must be an integer, got {type(index)}.")
+                        if index not in range(len(array_value)):
+                            raise IndexError(f"Array index {index} out of bounds for array of size {len(array_value)}.")
+                        if any(type(item) is not type(value) for item in array_value):
+                            raise TypeError(f"Array '{array_name}' contains elements of different types.")
+                        # We just checked that the arrays are compatible (or empty, but 🤫). Therefore,
+                        # we ignore the error in the next line.
+                        array_value[index] = value  # type: ignore[unsupported-operation]
                 return ""  # No output.
             case If():
                 is_condition_satisfied = statement.condition.evaluate(self.variables)
