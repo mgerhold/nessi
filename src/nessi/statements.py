@@ -8,6 +8,7 @@ from typing import override
 from nessi.array_type import ArrayType
 from nessi.context import Context
 from nessi.expressions import ArrayElement
+from nessi.expressions import Bool
 from nessi.expressions import Expression
 from nessi.expressions import Float
 from nessi.expressions import Integer
@@ -85,15 +86,18 @@ class Assign(Statement):
     def __init__(
         self,
         target: str | ArrayElement,
-        value: Expression | int | float,
+        value: Expression | int | float | bool,
         *,
         hidden_in_latex: bool = False,
     ) -> None:
         super().__init__(hidden_in_latex=hidden_in_latex)
-        if isinstance(value, int):
-            value = Integer(value)
-        elif isinstance(value, float):
-            value = Float(value)
+        match value:
+            case bool():
+                value = Bool(value)
+            case int():
+                value = Integer(value)
+            case float():
+                value = Float(value)
         self._target = target
         self._value = value
 

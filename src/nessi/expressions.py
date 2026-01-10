@@ -280,6 +280,24 @@ class Variable(Expression):
 
 
 @final
+class Bool(Expression):
+    def __init__(self, value: bool) -> None:
+        self._value = value
+
+    @override
+    def evaluate(self, context: Context) -> Value:
+        return self._value
+
+    @override
+    def to_latex(self) -> str:
+        return rf"\texttt{{{'true' if self._value else 'false'}}}"
+
+    @override
+    def __str__(self) -> str:
+        return "true" if self._value else "false"
+
+
+@final
 class Integer(Expression):
     def __init__(self, value: int) -> None:
         self._value = value

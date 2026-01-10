@@ -5,9 +5,12 @@ from typing import final
 from nassi_shneiderman_generator.latex import render_latex_to_pdf
 
 from nessi.array_type import ArrayType
+from nessi.expressions import Bool
 from nessi.expressions import Variable
 from nessi.program import Program
 from nessi.statements import Assign
+from nessi.statements import Break
+from nessi.statements import If
 from nessi.statements import Input
 from nessi.statements import Print
 from nessi.statements import While
@@ -82,7 +85,42 @@ EXAMPLES = [
             "index": 1,
             "value": 99,
         },
-    )
+    ),
+    Example(
+        program=Program(
+            [
+                Input("numbers", ArrayType(int, 10), hidden_in_latex=True),
+                Input("n", int, hidden_in_latex=True),
+                Assign("i", 0),
+                While(Variable("i") < Variable("n") - 1, label="Schleife").Repeat(
+                    Assign("j", 0),
+                    Assign("did_swap", False),
+                    While(Variable("j") < Variable("n") - Variable("i") - 1).Repeat(
+                        If(Variable("numbers")[Variable("j")] > Variable("numbers")[Variable("j") + 1]).Then(
+                            Assign("temp", Variable("numbers")[Variable("j")]),
+                            Assign(Variable("numbers")[Variable("j")], Variable("numbers")[Variable("j") + 1]),
+                            Assign(Variable("numbers")[Variable("j") + 1], Variable("temp")),
+                            Assign("did_swap", True),
+                        ),
+                        Assign("j", Variable("j") + 1),
+                    ),
+                    If(Variable("did_swap") == Bool(False)).Then(
+                        Break(label="Schleife"),
+                    ),
+                    Assign("i", Variable("i") + 1),
+                ),
+                Assign("i", 0),
+                While(Variable("i") < Variable("n")).Repeat(
+                    Print("{numbers[i]}"),
+                    Assign("i", Variable("i") + 1),
+                ),
+            ]
+        ),
+        input_values={
+            "numbers": [64, 34, 25, 12, 22, 11, 90, 55, 43, 78],
+            "n": 10,
+        },
+    ),
 ]
 
 
